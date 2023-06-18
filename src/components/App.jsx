@@ -1,39 +1,33 @@
-import { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Layout } from './Layout/Layout';
+import { NotFound } from './NotFound/NotFound';
+import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Home from 'pages/Home';
-import SharedLayout from './SharedLayout';
+import { lazy } from 'react';
 
-// Розділення коду:
-const Movies = lazy(() => import('../pages/Movies'));
-const MovieDetails = lazy(() => import('pages/MovieDetails'));
-const Cast = lazy(() => import('components/Cast'));
-const Reviews = lazy(() => import('components/Reviews'));
+const Movies = lazy(() => import('../pages/Movies/Movies'));
+const Home = lazy(() => import('../pages/Home/Home'));
+const MovieDetails = lazy(() => import('../pages/MovieDetails/MovieDetails'));
+const Cast = lazy(() => import('./Cast/Cast'));
+const Reviews = lazy(() => import('./Reviews/Reviews'));
+
 
 export const App = () => {
   return (
-    <>
+    <div>
       <Routes>
-        <Route path="/" element={<SharedLayout />}>
-          <Route index element={<Home />}></Route>
-          <Route path="movies" element={<Movies />}></Route>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />}/>
+          <Route path="movies" element={<Movies/>}/>
           <Route path="movies/:movieId" element={<MovieDetails />}>
-            <Route path="cast" element={<Cast />}></Route>
-            <Route path="reviews" element={<Reviews />}></Route>
+            <Route path="cast" element={ <Cast/>} />
+            <Route path="reviews" element={ <Reviews/> } />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<Home />}></Route>
+
       </Routes>
-      <ToastContainer theme="colored" position="top-center" autoClose={2000} />
-    </>
+
+      <ToastContainer autoClose={3000} theme="colored" />
+    </div>
   );
 };
-
-
-
-// '/' – компонент Home, домашня сторінка зі списком популярних кінофільмів.
-// '/movies' – компонент Movies, сторінка пошуку кінофільмів за ключовим словом.
-// '/movies/:movieId' – компонент MovieDetails, сторінка з детальною інформацією про кінофільм.
-// /movies/:movieId/cast – компонент Cast, інформація про акторський склад. Рендериться на сторінці MovieDetails.
-// /movies/:movieId/reviews – компонент Reviews, інформація про огляди. Рендериться на сторінці MovieDetails.
